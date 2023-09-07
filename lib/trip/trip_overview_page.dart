@@ -24,6 +24,8 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
   String owner = '';
   List<dynamic> categories = [];
   List<dynamic> locations = [];
+
+  Trip? userTrip;
   @override
   void initState() {
     super.initState();
@@ -36,6 +38,18 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
           .collection('reisen')
           .doc(widget.tripId)
           .get();
+
+      Trip userTrip = Trip(
+        tripName: tripDocument['name'],
+        startDate: (tripDocument['startdate'] as Timestamp).toDate(),
+        endDate: (tripDocument['enddate'] as Timestamp).toDate(),
+        tripLocations: tripDocument['locations'],
+        owner: tripDocument['owner'],
+        id: tripDocument.id,
+      );
+      BlocProvider.of<AppDataBloc>(context).add(SetUserTrip(userTrip));
+
+
       // setState(() {
       //   tripName = tripDocument['name'];
       //   startDate = (tripDocument['startdate'] as Timestamp).toDate();
@@ -71,8 +85,6 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
         body: TabBarView(
           children: [
             LocationTab(
-              categories: categories,
-              locations: locations,
             ),
             SettingsTab(
             ),

@@ -49,6 +49,12 @@ class UpdateCategories extends AppDataEvent {
   UpdateCategories(this.categories);
 }
 
+class TripDeletedEvent extends AppDataEvent {
+  final String tripId;
+
+  TripDeletedEvent(this.tripId);
+}
+
 class AppDataBloc extends Bloc<AppDataEvent, AppData> {
   AppDataBloc() : super(AppData(locations: [{}], categories: [{}]));
 
@@ -62,6 +68,8 @@ class AppDataBloc extends Bloc<AppDataEvent, AppData> {
       yield state.copyWith(categories: event.categories);
     } else if (event is SetUserTrip) {
       yield state.copyWith(userTrip: event.userTrip);
+    } else if (event is TripDeletedEvent) {
+      yield state.copyWith(userTrip: null);
     }
   }
 }

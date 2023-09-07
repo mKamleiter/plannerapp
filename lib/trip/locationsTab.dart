@@ -5,19 +5,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/app_data_bloc.dart';
 // (Fügen Sie hier weitere benötigte Importe ein...)
 
-class LocationTab extends StatelessWidget {
-  final List<dynamic> categories;
-  final List<dynamic> locations;
+class LocationTab extends StatefulWidget {
+  LocationTab();
 
-  const LocationTab({
-    required this.categories,
-    required this.locations,
-  });
+  @override
+  _LocationTabState createState() => _LocationTabState();
+}
+
+class _LocationTabState extends State<LocationTab> {
+  @override
+  void initState() {
+    super.initState();
+    // Hier initialisieren wir die Variablen. Es wäre besser, die Initialwerte von einem obergeordneten Widget zu übernehmen.
+    // tripName = widget.userTrip.tripName;
+    // startDate = widget.userTrip.startDate;
+    // endDate = widget.userTrip.endDate;
+  }
 
   @override
   Widget build(BuildContext context) {
     final appDataBloc = BlocProvider.of<AppDataBloc>(context);
     Trip userTrip = appDataBloc.state.userTrip!;
+    List<dynamic> locations = appDataBloc.state.locations;
+    List<dynamic> categories = appDataBloc.state.categories;
+    List<dynamic> tripLocations = userTrip.tripLocations;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -84,7 +95,10 @@ class LocationTab extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailsPage(
-                          location: locations[index],
+                          location: locations.firstWhere(
+                            (entry) =>
+                                entry['id'] == userTrip.tripLocations[index],
+                          ),
                         ),
                       ),
                     );
@@ -115,7 +129,11 @@ class LocationTab extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(15.0),
                                 child: Image.asset(
-                                  locations[index]['image'],
+                                  locations.firstWhere(
+                                    (entry) =>
+                                        entry['id'] ==
+                                        userTrip.tripLocations[index],
+                                  )['image'],
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                 ),
@@ -127,7 +145,11 @@ class LocationTab extends StatelessWidget {
                                   children: [
                                     SizedBox(width: 8),
                                     Text(
-                                      locations[index]['displayName'],
+                                      locations.firstWhere(
+                                        (entry) =>
+                                            entry['id'] ==
+                                            userTrip.tripLocations[index],
+                                      )['displayName'],
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -173,7 +195,11 @@ class LocationTab extends StatelessWidget {
                                     }).toList(),
                                     const SizedBox(width: 16),
                                     Text(
-                                      locations[index]['address'],
+                                      locations.firstWhere(
+                                        (entry) =>
+                                            entry['id'] ==
+                                            userTrip.tripLocations[index],
+                                      )['address'],
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,

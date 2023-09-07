@@ -89,6 +89,10 @@ class _SettingsTabState extends State<SettingsTab> {
                                   .collection('reisen')
                                   .doc(userTrip.id)
                                   .delete();
+                              appDataBloc.add(TripDeletedEvent(userTrip.id));
+                              setState(() {
+                                userTrip = appDataBloc.state.userTrip!;
+                              });
                               Navigator.of(context).pop(); // Dialog schließen
                               Navigator.of(context)
                                   .pop(); // Zurück zur vorherigen Seite
