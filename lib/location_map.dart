@@ -32,6 +32,7 @@ class _LocationsMapState extends State<LocationsMap> {
   bool isCategoryWindowOpen = false;
   Set<String> _selectedCategories = {};
   bool _categoryWindowVisible = false;
+  bool _filterUserTripLocations = false;
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +162,24 @@ class _LocationsMapState extends State<LocationsMap> {
                           currentZoom - 0.5); // Zoom out um 0.5
                     },
                     // Die Größe des FloatingActionButton passt sich der Größe des Containers an
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 200,
+                left: 10,
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  child: FloatingActionButton(
+                    heroTag: 'filterUserTripLocationsButton',
+                    child: Icon(Icons.filter_list), // Filter-Icon
+                    onPressed: () {
+                      setState(() {
+                        _filterUserTripLocations =
+                            !_filterUserTripLocations;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -297,14 +316,17 @@ class _LocationsMapState extends State<LocationsMap> {
 
   List<Marker> _buildMarkers(List locations, List categories, Trip userTrip) {
     return locations.where((location) {
-      if (_selectedCategories.isEmpty) {
+      if (_filterUserTripLocations && !userTrip.tripLocations.contains(location['id'])) {
+      return false;
+    }
+    if (_selectedCategories.isEmpty) {
+      return true;
+    }
+    for (var category in location['categories']) {
+      if (_selectedCategories.contains(category)) {
         return true;
       }
-      for (var category in location['categories']) {
-        if (_selectedCategories.contains(category)) {
-          return true;
-        }
-      }
+    }
       return false;
     }).map((location) {
       String categoryName = location['categories'][0];
