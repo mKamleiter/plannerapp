@@ -3,12 +3,12 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-import 'bottom_bar.dart';
-import 'start_page.dart';
-import 'search_results_page.dart';
+import '../bottom_bar.dart';
+import '../start_page.dart';
+import '../search_results_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'app_data_bloc.dart';
-
+import '../app_data_bloc.dart';
+import 'info_panel.dart';
 class LocationsMap extends StatefulWidget {
   String? selectedLocationId;
   Map<dynamic, dynamic>? selectedLocation;
@@ -85,7 +85,7 @@ class _LocationsMapState extends State<LocationsMap> {
         body: SlidingUpPanel(
             minHeight: pminheight ?? 0,
             maxHeight: MediaQuery.of(context).size.height / 2,
-            panel: _buildSlidingPanelContent(),
+            panel: InfoPanelContent(selectedLocation: widget.selectedLocation),
             body: Stack(children: [
               FlutterMap(
                   mapController: mapController,
@@ -273,47 +273,6 @@ class _LocationsMapState extends State<LocationsMap> {
     });
   }
 
-  Widget _buildSlidingPanelContent() {
-    if (widget.selectedLocation == null) {
-      return const Center(child: Text('Tippe auf eine Location!'));
-    }
-    return Column(
-      children: [
-        Text(
-          widget.selectedLocation!['displayName'] ?? 'Unbekannt',
-          style: const TextStyle(
-              fontSize: 30, color: const Color.fromARGB(255, 51, 51, 51)),
-        ),
-        const Divider(),
-        Image.asset(
-            widget.selectedLocation!['image'] ??
-                "image/assets/imageplatzhalter.png",
-            height: 100), // Bild der Location
-        const Divider(),
-        const Text(
-          'Beschreibung',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(widget.selectedLocation!['description'] ?? ''),
-        const Divider(),
-        const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Öffnungszeiten',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // Öffnungszeiten mit Uhr-Symbol
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-          child: _buildOpeningHours(widget.selectedLocation!['openingHours']),
-        ),
-        // Hier können Sie weitere Informationen hinzufügen
-      ],
-    );
-  }
-
   List<Marker> _buildMarkers(List locations, List categories, Trip userTrip) {
     return locations.where((location) {
       if (_filterUserTripLocations && !userTrip.tripLocations.contains(location['id'])) {
@@ -367,38 +326,4 @@ class _LocationsMapState extends State<LocationsMap> {
     }).toList();
   }
 
-  Widget _buildOpeningHours(Map<String, dynamic>? openingHours) {
-    if (openingHours == null) {
-      return const Text(
-        'Öffnungszeiten nicht verfügbar',
-        style: TextStyle(fontSize: 14, color: Colors.grey),
-      );
-    }
-
-    List<Widget> rows = [];
-    for (var day in openingHours.keys) {
-      rows.add(
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                day,
-                style: const TextStyle(fontSize: 14, color: Colors.black),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                openingHours[day] ?? 'N/A',
-                style: const TextStyle(fontSize: 14, color: Colors.black),
-              ),
-            ),
-          ],
-        ),
-      );
-      rows.add(
-          const SizedBox(height: 4.0)); // Kleinerer Abstand zwischen den Zeilen
-    }
-
-    return Column(children: rows);
-  }
 }

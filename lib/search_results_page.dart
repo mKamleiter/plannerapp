@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'bottom_bar.dart';
 import 'start_page.dart';
 import 'details_page.dart';
-import 'location_map.dart';
+import 'map/location_map.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app_data_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

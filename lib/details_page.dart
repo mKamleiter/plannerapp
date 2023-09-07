@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'location_map.dart';
+import 'map/location_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app_data_bloc.dart';

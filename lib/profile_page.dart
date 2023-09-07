@@ -3,7 +3,7 @@ import 'auth_google.dart';
 import 'bottom_bar.dart';
 import 'start_page.dart';
 import 'search_results_page.dart';
-import 'location_map.dart';
+import 'map/location_map.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
