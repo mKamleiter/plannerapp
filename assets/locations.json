@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "categories": ["Strand"],
+    "displayName": "Playa de Palma",
+    "description": "Ein wunderschöner Strand in Palma de Mallorca.",
+    "address": "123 Mallorca Street",
+    "latitude": 39.5146,
+    "longitude": 2.7465,
+    "openingHours": {
+      "Montag": "08:00 - 17:00",
+      "Dienstag": "08:00 - 17:00",
+      "Mittwoch": "08:00 - 17:00",
+      "Donnerstag": "08:00 - 17:00",
+      "Freitag": "08:00 - 19:00",
+      "Samstag": "10:00 - 16:00",
+      "Sonntag": "Geschlossen"
+    },
+    "image": "assets/images/imageplatzhalter.png",
+    "isFeatured": true
+  },
+  {
+    "id": 2,
+    "categories": ["Club", "Restaurant"],
+    "displayName": "Casatestsddsf",
+    "description": "Traditionelle spanische Küche in einem gemütlichen Ambiente.",
+    "address": "123 Mallorca Street",
+    "latitude": 39.5153,
+    "longitude": 2.7471,
+    "openingHours": {
+      "Montag": "08:00 - 17:00",
+      "Dienstag": "08:00 - 17:00",
+      "Mittwoch": "08:00 - 17:00",
+      "Donnerstag": "08:00 - 17:00",
+      "Freitag": "08:00 - 19:00",
+      "Samstag": "10:00 - 16:00",
+      "Sonntag": "Geschlossen"
+    },
+    "image": "assets/images/imageplatzhalter.png",
+    "isFeatured": true
+  },
+  {
+    "id": 3,
+    "categories": ["Club", "Bar"],
+    "displayName": "Casa Juan",
+    "description": "Traditionelleasgdfsdjfgsdjfg jksdflkgkl sdkln Ambiente.",
+    "address": "123 Mallorca Street",
+    "latitude": 39.5125,
+    "longitude": 2.7451,
+    "openingHours": {
+      "Montag": "08:00 - 17:00",
+      "Dienstag": "08:00 - 17:00",
+      "Mittwoch": "08:00 - 17:00",
+      "Donnerstag": "08:00 - 17:00",
+      "Freitag": "08:00 - 19:00",
+      "Samstag": "10:00 - 16:00",
+      "Sonntag": "Geschlossen"
+    },
+    "image": "assets/images/imageplatzhalter.png",
+    "isFeatured": false
+  }
+]

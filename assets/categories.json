@@ -1,0 +1,27 @@
+[
+  {
+    "name": "strand",
+    "index": 1,
+    "image": "assets/images/category1.png"
+  },
+  {
+    "name": "Restaurant",
+    "index": 2,
+    "image": "assets/images/category2.png"
+  },
+  {
+    "name": "Club",
+    "index": 3,
+    "image": "assets/images/category3.png"
+  },
+  {
+    "name": "Bar",
+    "index": 4,
+    "image": "assets/images/category4.png"
+  },
+  {
+    "name": "category 5",
+    "index": 5,
+    "image": "assets/images/category5.png"
+  }
+]
