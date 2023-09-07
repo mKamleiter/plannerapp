@@ -38,7 +38,7 @@ class _LocationsMapState extends State<LocationsMap> {
     return BlocBuilder<AppDataBloc, AppData>(builder: (context, appData) {
       final List<dynamic> locations = appData.locations;
       final List<dynamic> categories = appData.categories;
-
+      Trip userTrip = appData.userTrip!;
       return Scaffold(
         bottomNavigationBar: CustomBottomBar(
           currentIndex: _currentIndex,
@@ -107,7 +107,7 @@ class _LocationsMapState extends State<LocationsMap> {
                         fitBoundsOptions: FitBoundsOptions(
                           padding: EdgeInsets.all(50),
                         ),
-                        markers: _buildMarkers(locations, categories),
+                        markers: _buildMarkers(locations, categories, userTrip),
                         polygonOptions: PolygonOptions(
                             borderColor: Colors.blueAccent,
                             color: Colors.black12,
@@ -295,7 +295,7 @@ class _LocationsMapState extends State<LocationsMap> {
     );
   }
 
-  List<Marker> _buildMarkers(List locations, List categories) {
+  List<Marker> _buildMarkers(List locations, List categories, Trip userTrip) {
     return locations.where((location) {
       if (_selectedCategories.isEmpty) {
         return true;
@@ -310,10 +310,17 @@ class _LocationsMapState extends State<LocationsMap> {
       String categoryName = location['categories'][0];
       String? categoryImagePath = categories
           .firstWhere((category) => category['name'] == categoryName)['image'];
-
+      bool isTripLocation = userTrip.tripLocations.contains(location['id']);
       bool isSelected = location['id'] == widget.selectedLocationId;
       double markerSize = isSelected ? 30.0 : 30.0;
-      Color markerColor = isSelected ? Colors.blue : Colors.red;
+      Color markerColor;
+      if (isSelected) {
+        markerColor = Colors.blue;
+      } else if (isTripLocation) {
+        markerColor = Colors.green;
+      } else {
+        markerColor = Colors.black87;
+      }
 
       return Marker(
         width: markerSize,
