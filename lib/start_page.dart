@@ -38,8 +38,7 @@ class _StartPageState extends State<StartPage> {
 
   Future<List<Map<String, dynamic>>> _loadLocationsFromFirestore() async {
     List<Map<String, dynamic>> locations = [];
-    CollectionReference collectionRef =
-        FirebaseFirestore.instance.collection('locations');
+    CollectionReference collectionRef = FirebaseFirestore.instance.collection('locations');
     QuerySnapshot querySnapshot = await collectionRef.get();
 
     for (var doc in querySnapshot.docs) {
@@ -61,8 +60,7 @@ class _StartPageState extends State<StartPage> {
 
   Future<List<Map<String, dynamic>>> _loadCategoriesFromFirestore() async {
     List<Map<String, dynamic>> categories = [];
-    CollectionReference collectionRef =
-        FirebaseFirestore.instance.collection('categories');
+    CollectionReference collectionRef = FirebaseFirestore.instance.collection('categories');
     QuerySnapshot querySnapshot = await collectionRef.get();
 
     for (var doc in querySnapshot.docs) {
@@ -76,21 +74,12 @@ class _StartPageState extends State<StartPage> {
   }
 
   Future<Trip> _loadUserTripFromFirestore(String? userId) async {
-    Trip userTrip = Trip(
-        tripName: "",
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        owner: "",
-        tripLocations: [],
-        id: "");
-    CollectionReference reisen =
-        FirebaseFirestore.instance.collection('reisen');
+    Trip userTrip = Trip(tripName: "", startDate: DateTime.now(), endDate: DateTime.now(), owner: "", tripLocations: [], id: "");
+    CollectionReference reisen = FirebaseFirestore.instance.collection('reisen');
 
-    QuerySnapshot querySnapshot =
-        await reisen.where('owner', isEqualTo: userId).get();
+    QuerySnapshot querySnapshot = await reisen.where('owner', isEqualTo: userId).get();
     try {
-      Map<String, dynamic> data =
-          querySnapshot.docs[0].data() as Map<String, dynamic>;
+      Map<String, dynamic> data = querySnapshot.docs[0].data() as Map<String, dynamic>;
       userTrip.endDate = data['enddate'].toDate();
       userTrip.startDate = data['startdate'].toDate();
       userTrip.owner = data['owner'];
@@ -104,8 +93,7 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _loadData() async {
-    String categoriesJson =
-        await rootBundle.loadString('assets/categories.json');
+    String categoriesJson = await rootBundle.loadString('assets/categories.json');
 
     // String locationsJson = await rootBundle.loadString('assets/locations.json');
     // List<dynamic> locationsData = json.decode(locationsJson);
@@ -220,10 +208,8 @@ class _StartPageState extends State<StartPage> {
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('reisen').snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: FirebaseFirestore.instance.collection('reisen').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
@@ -232,14 +218,12 @@ class _StartPageState extends State<StartPage> {
                   return Center(child: Text('Fehler: ${snapshot.error}'));
                 }
 
-                String? userId = appDataBloc.state
-                    .userId; // Ihre Methode zur Ermittlung der aktuellen Benutzer-ID
+                String? userId = appDataBloc.state.userId; // Ihre Methode zur Ermittlung der aktuellen Benutzer-ID
 
                 if (userId != null) {
                   bool userHasTrip = false;
                   for (var doc in snapshot.data!.docs) {
-                    if (doc['owner'] == userId ||
-                        (doc['members'] as List).contains(userId)) {
+                    if (doc['owner'] == userId || (doc['members'] as List).contains(userId)) {
                       userHasTrip = true;
                       _tripId = doc.id;
                       break;
@@ -252,33 +236,23 @@ class _StartPageState extends State<StartPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TripOverviewPage(
-                                    tripId:
-                                        _tripId // Hier setzen wir den Kategorienamen als Suchbegriff
+                                builder: (context) => TripOverviewPage(tripId: _tripId // Hier setzen wir den Kategorienamen als Suchbegriff
                                     ),
                               ),
                             );
                           },
                           child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(color: Colors.grey)),
-                              child: Image.asset(
-                                  'assets/images/imageplatzhalter.png')))
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0), border: Border.all(color: Colors.grey)),
+                              child: Image.asset('assets/images/imageplatzhalter.png')))
                       : GestureDetector(
                           onTap: _showAddTripSheet,
                           child: Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal:
-                                    16.0), // Fügt einen Rand horizontal hinzu
+                            margin: EdgeInsets.symmetric(horizontal: 16.0), // Fügt einen Rand horizontal hinzu
                             height: 200,
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors
-                                      .grey), // Definiert die Farbe des Randes
-                              borderRadius: BorderRadius.circular(
-                                  12.0), // Rundet die Ecken ab
+                              border: Border.all(color: Colors.grey), // Definiert die Farbe des Randes
+                              borderRadius: BorderRadius.circular(12.0), // Rundet die Ecken ab
                             ),
                             child: Center(
                               child: Icon(
@@ -322,8 +296,7 @@ class _StartPageState extends State<StartPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => SearchResultsPage(
-                          query: category[
-                              'name'], // Hier setzen wir den Kategorienamen als Suchbegriff
+                          query: category['name'], // Hier setzen wir den Kategorienamen als Suchbegriff
                         ),
                       ),
                     );
@@ -344,6 +317,8 @@ class _StartPageState extends State<StartPage> {
 
   void _showAddTripSheet() {
     String? _tripName;
+    String? _hotelName;
+    String? _hotelAddress;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -364,24 +339,40 @@ class _StartPageState extends State<StartPage> {
                       });
                     },
                   ),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Hotelname',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _hotelName = value;
+                      });
+                    },
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Hoteladresse',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _hotelAddress = value;
+                      });
+                    },
+                  ),
                   ElevatedButton(
                     onPressed: () => _selectStartDate(context),
-                    child: Text(_startDate == null
-                        ? 'Startdatum auswählen'
-                        : 'Start: ${_startDate!.toLocal().toString().split(' ')[0]}'),
+                    child: Text(_startDate == null ? 'Startdatum auswählen' : 'Start: ${_startDate!.toLocal().toString().split(' ')[0]}'),
                   ),
                   ElevatedButton(
                     onPressed: () => _selectEndDate(context),
-                    child: Text(_endDate == null
-                        ? 'Enddatum auswählen'
-                        : 'Ende: ${_endDate!.toLocal().toString().split(' ')[0]}'),
+                    child: Text(_endDate == null ? 'Enddatum auswählen' : 'Ende: ${_endDate!.toLocal().toString().split(' ')[0]}'),
                   ),
                   // Hier fügen Sie Ihre Datumsauswahlfelder hinzu
                   // ...
                   ElevatedButton(
                     onPressed: () {
                       if (_startDate != null && _endDate != null) {
-                        _addNewTrip(_tripName, _startDate!, _endDate!);
+                        _addNewTrip(_tripName, _startDate!, _endDate!, _hotelName!, _hotelAddress!);
                         Navigator.pop(context);
                       }
                     },
@@ -394,10 +385,13 @@ class _StartPageState extends State<StartPage> {
         });
   }
 
-  Future<void> _addNewTrip(
-      String? name, DateTime startDate, DateTime endDate) async {
+  Future<void> _addNewTrip(String? name, DateTime startDate, DateTime endDate, String hotelName, String hotelAddress) async {
     try {
       String? userId = await _getCurrentUserId();
+      final Map<String, String> hotelData = {
+      "name": hotelName,
+      "adresse": hotelAddress,
+    };
       if (userId != null) {
         await FirebaseFirestore.instance.collection('reisen').add({
           'name': name,
@@ -406,6 +400,7 @@ class _StartPageState extends State<StartPage> {
           'locations': [],
           'startdate': startDate,
           'enddate': endDate,
+          'hotel': hotelData,
         });
       }
     } catch (e) {

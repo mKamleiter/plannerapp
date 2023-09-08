@@ -6,7 +6,12 @@ class AppData {
   final List<dynamic> categories;
   final Trip? userTrip;
 
-  AppData({this.userId, required this.locations, required this.categories, this.userTrip,});
+  AppData({
+    this.userId,
+    required this.locations,
+    required this.categories,
+    this.userTrip,
+  });
 
   AppData copyWith({
     String? userId,
@@ -74,7 +79,6 @@ class AppDataBloc extends Bloc<AppDataEvent, AppData> {
   }
 }
 
-
 class Trip {
   String tripName;
   DateTime startDate;
@@ -89,5 +93,15 @@ class Trip {
     required this.owner,
     required this.tripLocations,
     required this.id,
+  });
+}
+
+class Hotel {
+  String name;
+  String address;
+
+  Hotel({
+    required this.name,
+    required this.address,
   });
 }
