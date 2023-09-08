@@ -37,10 +37,9 @@ class CustomBottomBar extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LocationsMap(), // Die Seite, auf der Ihre Karte angezeigt wird
+                builder: (context) => LocationsMap(),
               ),
             );
-            // Hier können Sie weitere Navigationen für das Profil hinzufügen
             break;
 
           case 3:

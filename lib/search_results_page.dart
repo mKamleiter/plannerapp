@@ -129,10 +129,6 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                                 icon: (!userTrip.tripLocations.contains(locations[index]['id'])) ? Icons.add : Icons.remove,
                                 onPressed: (context) {
                                   (!userTrip.tripLocations.contains(locations[index]['id'])) ? addToCurrentTrip(locations[index]['id'], context) : removeFromCurrentTrip(locations[index]['id'], context);
-                                  // Hier führen Sie die Logik aus, um das Element zur Firebase-Datenbank hinzuzufügen
-                                  // Zum Beispiel:
-                                  // final tripRef = FirebaseFirestore.instance.collection('trips').doc(userId);
-                                  // tripRef.set({ 'locations': FieldValue.arrayUnion([locations[index]]) });
                                 },
                               ),
                             ],
@@ -198,6 +194,23 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                                                   ],
                                                 ),
                                               ),
+                                              if (userTrip.tripLocations.contains(locations[index]['id']))
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 5), // Abstand zwischen dem Namen und dem Hinweis
+                                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2), // Padding innerhalb des Hinweis-Containers
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green, // Hintergrundfarbe des Hinweis-Containers
+                                                    borderRadius: BorderRadius.circular(8), // Eckenradius für abgerundete Ecken
+                                                  ),
+                                                  child: Text(
+                                                    "Trip",
+                                                    style: TextStyle(
+                                                      fontSize: 12, // Schriftgröße des Hinweises
+                                                      color: Colors.white, // Schriftfarbe des Hinweises
+                                                      fontWeight: FontWeight.bold, // Schriftstärke des Hinweises
+                                                    ),
+                                                  ),
+                                                ),
                                               IconButton(
                                                 icon: Icon(
                                                   Icons.star,
