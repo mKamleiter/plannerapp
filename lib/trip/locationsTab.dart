@@ -39,31 +39,31 @@ class _LocationTabState extends State<LocationTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${userTrip.startDate!.toLocal().toString().split(' ')[0]} bis ${userTrip.endDate!.toLocal().toString().split(' ')[0]}',
-                  style: TextStyle(fontSize: 16),
+                  '${userTrip.startDate.toLocal().toString().split(' ')[0]} bis ${userTrip.endDate.toLocal().toString().split(' ')[0]}',
+                  style: const TextStyle(fontSize: 16),
                 ),
               ],
             ),
-          Divider(),
+          const Divider(),
           if (userTrip.owner.isNotEmpty)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Owner',
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   userTrip.owner,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ],
             ),
-          Divider(),
-          Center(
+          const Divider(),
+          const Center(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: Text('Meine Locations', style: TextStyle(fontSize: 24)),
             ),
           ),
@@ -94,7 +94,7 @@ class _LocationTabState extends State<LocationTab> {
                           width: MediaQuery.of(context).size.width - 16,
                           height: 200,
                           margin:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
                             boxShadow: [
@@ -102,7 +102,7 @@ class _LocationTabState extends State<LocationTab> {
                                 color: Colors.black.withOpacity(0.15),
                                 spreadRadius: 3,
                                 blurRadius: 10,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -125,7 +125,7 @@ class _LocationTabState extends State<LocationTab> {
                                 left: 10,
                                 child: Row(
                                   children: [
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Text(
                                       locations.firstWhere(
                                         (entry) =>

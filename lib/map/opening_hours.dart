@@ -7,12 +7,6 @@ class OpeningHoursContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (openingHours == null) {
-      return const Text(
-        'Öffnungszeiten nicht verfügbar',
-        style: TextStyle(fontSize: 14, color: Colors.grey),
-      );
-    }
 
     List<Widget> rows = [];
     for (var day in openingHours.keys) {

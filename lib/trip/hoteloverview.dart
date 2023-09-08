@@ -38,24 +38,24 @@ class _AddHotelPageState extends State<AddHotelPage> {
     Trip userTrip = appDataBloc.state.userTrip!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hotel hinzufügen'),
+        title: const Text('Hotel hinzufügen'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: hotelNameController,
-              decoration: InputDecoration(labelText: 'Hotelname'),
+              decoration: const InputDecoration(labelText: 'Hotelname'),
             ),
             TextField(
               controller: addressController,
-              decoration: InputDecoration(labelText: 'Adresse'),
+              decoration: const InputDecoration(labelText: 'Adresse'),
             ),
             // ... (andere Textfelder für weitere Informationen)
             ElevatedButton(
               onPressed: () => saveHotel(context),
-              child: Text('Speichern'),
+              child: const Text('Speichern'),
             ),
           ],
         ),

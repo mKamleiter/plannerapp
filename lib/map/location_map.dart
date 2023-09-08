@@ -26,10 +26,10 @@ class LocationsMap extends StatefulWidget {
 
 class _LocationsMapState extends State<LocationsMap> {
   var mapController = MapController();
-  int _currentIndex = 2;
+  final int _currentIndex = 2;
   double pminheight = 0;
   bool isCategoryWindowOpen = false;
-  Set<String> _selectedCategories = {};
+  final Set<String> _selectedCategories = {};
   bool _categoryWindowVisible = false;
   bool _filterUserTripLocations = false;
 
@@ -63,20 +63,20 @@ class _LocationsMapState extends State<LocationsMap> {
                     MarkerClusterLayerWidget(
                       options: MarkerClusterLayerOptions(
                         maxClusterRadius: 120,
-                        size: Size(40, 40),
-                        fitBoundsOptions: FitBoundsOptions(
+                        size: const Size(40, 40),
+                        fitBoundsOptions: const FitBoundsOptions(
                           padding: EdgeInsets.all(50),
                         ),
                         markers: _buildMarkers(locations, categories, userTrip),
-                        polygonOptions: PolygonOptions(
+                        polygonOptions: const PolygonOptions(
                             borderColor: Colors.blueAccent,
                             color: Colors.black12,
                             borderStrokeWidth: 3),
                         builder: (context, markers) {
                           return FloatingActionButton(
                             heroTag: 'cluster',
-                            child: Text(markers.length.toString()),
                             onPressed: null,
+                            child: Text(markers.length.toString()),
                           );
                         },
                       ),
@@ -85,17 +85,17 @@ class _LocationsMapState extends State<LocationsMap> {
               Positioned(
                 bottom: 300, // 80 als Abstand vom unteren Rand, anpassbar
                 right: 10, // 10 als Abstand vom rechten Rand, anpassbar
-                child: Container(
+                child: SizedBox(
                   height: 40.0, // Gewünschte Höhe
                   width: 40.0, // Gewünschte Breite
                   child: FloatingActionButton(
                     heroTag: 'zoomIn',
-                    child: Icon(
+                    child: const Icon(
                       Icons.zoom_in,
                       size: 18.0,
                     ), // Anpassen der Icon-Größe, wenn nötig
                     onPressed: () {
-                      double currentZoom = mapController.zoom!;
+                      double currentZoom = mapController.zoom;
                       mapController.move(mapController.center,
                           currentZoom + 0.5); // Zoom in um 0.5
                     },
@@ -106,17 +106,17 @@ class _LocationsMapState extends State<LocationsMap> {
               Positioned(
                 bottom: 250, // 10 als Abstand vom unteren Rand
                 right: 10, // 10 als Abstand vom rechten Rand
-                child: Container(
+                child: SizedBox(
                   height: 40.0, // Gewünschte Höhe
                   width: 40.0, // Gewünschte Breite
                   child: FloatingActionButton(
                     heroTag: 'zoomOut',
-                    child: Icon(
+                    child: const Icon(
                       Icons.zoom_out,
                       size: 18.0,
                     ), // Anpassen der Icon-Größe, wenn nötig
                     onPressed: () {
-                      double currentZoom = mapController.zoom!;
+                      double currentZoom = mapController.zoom;
                       mapController.move(mapController.center,
                           currentZoom - 0.5); // Zoom out um 0.5
                     },
@@ -127,12 +127,12 @@ class _LocationsMapState extends State<LocationsMap> {
               Positioned(
                 bottom: 200,
                 left: 10,
-                child: Container(
+                child: SizedBox(
                   height: 40.0,
                   width: 40.0,
                   child: FloatingActionButton(
                     heroTag: 'filterUserTripLocationsButton',
-                    child: Icon(Icons.filter_list), // Filter-Icon
+                    child: const Icon(Icons.filter_list), // Filter-Icon
                     onPressed: () {
                       setState(() {
                         _filterUserTripLocations = !_filterUserTripLocations;
@@ -145,12 +145,12 @@ class _LocationsMapState extends State<LocationsMap> {
                 bottom: 250,
                 left:
                     10, // Verändert von 'right' zu 'left' um auf der linken Seite zu platzieren
-                child: Container(
+                child: SizedBox(
                   height: 40.0,
                   width: 40.0,
                   child: FloatingActionButton(
                     heroTag: 'categoryButton',
-                    child: Icon(Icons.category), // Kategorie-Icon
+                    child: const Icon(Icons.category), // Kategorie-Icon
                     onPressed: () {
                       setState(() {
                         isCategoryWindowOpen = !isCategoryWindowOpen;
@@ -178,7 +178,7 @@ class _LocationsMapState extends State<LocationsMap> {
     return BlocBuilder<AppDataBloc, AppData>(builder: (context, appData) {
       final List<dynamic> categories = appData.categories;
       return AnimatedOpacity(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         opacity: _categoryWindowVisible ? 1 : 0,
         child: GestureDetector(
           onTap: () {
@@ -193,7 +193,7 @@ class _LocationsMapState extends State<LocationsMap> {
               borderRadius: BorderRadius.circular(16.0),
               color: Colors.white.withOpacity(0.7),
             ),
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Wrap(
               spacing: 8.0,
               runSpacing: 4.0,
@@ -212,14 +212,14 @@ class _LocationsMapState extends State<LocationsMap> {
                   },
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                        const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                     decoration: BoxDecoration(
                       color: isSelected ? Colors.blue : Colors.grey,
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Text(
                       category['name'],
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 );

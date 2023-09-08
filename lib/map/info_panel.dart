@@ -16,7 +16,7 @@ class InfoPanelContent extends StatelessWidget {
         Text(
           selectedLocation!['displayName'] ?? 'Unbekannt',
           style: const TextStyle(
-              fontSize: 30, color: const Color.fromARGB(255, 51, 51, 51)),
+              fontSize: 30, color: Color.fromARGB(255, 51, 51, 51)),
         ),
         const Divider(),
         Image.asset(
