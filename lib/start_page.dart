@@ -12,6 +12,9 @@ import 'auth_google.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'trip/trip_overview_page.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:mallorcaplanner/trip/hotelsuggestions.dart';
+
 
 class StartPage extends StatefulWidget {
   @override
@@ -74,7 +77,7 @@ class _StartPageState extends State<StartPage> {
   }
 
   Future<Trip> _loadUserTripFromFirestore(String? userId) async {
-    Trip userTrip = Trip(tripName: "", startDate: DateTime.now(), endDate: DateTime.now(), owner: "", tripLocations: [], id: "");
+    Trip userTrip=Trip(tripName: "", startDate: DateTime.now(), endDate: DateTime.now(), owner: "", tripLocations: [""], id: "", hotel: Hotel(address: "", name: ""));
     CollectionReference reisen = FirebaseFirestore.instance.collection('reisen');
 
     QuerySnapshot querySnapshot = await reisen.where('owner', isEqualTo: userId).get();
@@ -86,6 +89,9 @@ class _StartPageState extends State<StartPage> {
       userTrip.tripName = data['name'];
       userTrip.tripLocations = data['locations'];
       userTrip.id = querySnapshot.docs[0].id;
+      userTrip.hotel = Hotel(name: data['hotel']['name'], address: data['hotel']['address']);
+      
+      
     } catch (e) {
       print("Error loading user trip data: $e");
     }
@@ -118,8 +124,8 @@ class _StartPageState extends State<StartPage> {
     }
 
     _loadUserTripFromFirestore(fetchedUserId).then((userTrip) {
-      appDataBloc.add(SetUserTrip(userTrip));
-      setState(() => userTrip = userTrip);
+        appDataBloc.add(SetUserTrip(userTrip));
+        setState(() => userTrip = userTrip);
     });
   }
 
@@ -316,6 +322,8 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _showAddTripSheet() {
+    final TextEditingController _hotelNameController = TextEditingController();
+
     String? _tripName;
     String? _hotelName;
     String? _hotelAddress;
@@ -339,13 +347,28 @@ class _StartPageState extends State<StartPage> {
                       });
                     },
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Hotelname',
+                  TypeAheadField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: _hotelNameController,
+                      decoration: InputDecoration(labelText: 'Hotelname'),
+                      onChanged: (value) {
+                        setState(() {
+                          _hotelName = value;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
+                    suggestionsCallback: (pattern) async {
+                      return await getHotelSuggestions(pattern);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
                       setState(() {
-                        _hotelName = value;
+                        _hotelName = suggestion;
+                        _hotelNameController.text = suggestion;
                       });
                     },
                   ),
@@ -388,10 +411,7 @@ class _StartPageState extends State<StartPage> {
   Future<void> _addNewTrip(String? name, DateTime startDate, DateTime endDate, String hotelName, String hotelAddress) async {
     try {
       String? userId = await _getCurrentUserId();
-      final Map<String, String> hotelData = {
-      "name": hotelName,
-      "adresse": hotelAddress,
-    };
+      Hotel hotel = Hotel(name: hotelName, address: hotelAddress);
       if (userId != null) {
         await FirebaseFirestore.instance.collection('reisen').add({
           'name': name,
@@ -400,7 +420,10 @@ class _StartPageState extends State<StartPage> {
           'locations': [],
           'startdate': startDate,
           'enddate': endDate,
-          'hotel': hotelData,
+          'hotel': {
+            'name': hotelName,
+            'address': hotelAddress,
+          },
         });
       }
     } catch (e) {

@@ -48,6 +48,7 @@ dependencies:
   google_sign_in: ^6.1.5
   cloud_firestore: ^4.9.1
   flutter_slidable: ^3.0.0
+  flutter_typeahead: ^4.7.0
 
 dev_dependencies:
   flutter_test:

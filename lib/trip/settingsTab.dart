@@ -25,6 +25,9 @@ class _SettingsTabState extends State<SettingsTab> {
         ),
       ),
     );
+    setState(() {
+      userTrip = BlocProvider.of<AppDataBloc>(context).state.userTrip!;
+    });
     // if (result != null) {
     //   setState(() {
     //     tripName = result['tripName'];
