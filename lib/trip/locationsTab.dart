@@ -34,35 +34,17 @@ class _LocationTabState extends State<LocationTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (userTrip.tripName.isNotEmpty)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Titel der Reise',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  userTrip.tripName,
-                  style: TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
-          Divider(),
           if (userTrip.startDate != null && userTrip.endDate != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Datum ${userTrip.startDate!.toLocal().toString().split(' ')[0]} bis ${userTrip.endDate!.toLocal().toString().split(' ')[0]}',
+                  '${userTrip.startDate!.toLocal().toString().split(' ')[0]} bis ${userTrip.endDate!.toLocal().toString().split(' ')[0]}',
                   style: TextStyle(fontSize: 16),
                 ),
               ],
             ),
           Divider(),
-          // Hier fügen Sie die Logik hinzu, um den Owner anzuzeigen
-          // Sie benötigen eine zusätzliche Variable, um die Owner-Informationen zu speichern.
           if (userTrip.owner.isNotEmpty)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

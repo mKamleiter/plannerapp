@@ -69,12 +69,13 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
     setState(() {
       categories = appDataBloc.state.categories;
       locations = appDataBloc.state.locations;
+      userTrip = appDataBloc.state.userTrip;
     });
     return DefaultTabController(
       length: 2, // Anzahl der Tabs
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Trip Overview'),
+          title: Text(userTrip?.tripName ?? "Meine Reise"),
           bottom: TabBar(
             tabs: [
               Tab(text: "Info"),

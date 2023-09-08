@@ -161,225 +161,185 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     final appDataBloc = BlocProvider.of<AppDataBloc>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('MallorcaPlanner'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          // Bild mit Suchleiste
-          Container(
-            height: MediaQuery.of(context).size.height / 3,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/hero.png'),
-                fit: BoxFit.cover,
-              ),
+        appBar: AppBar(
+          title: Text('MallorcaPlanner'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
             ),
-            alignment: Alignment.center,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: TextField(
-                //controller: _searchController,
-                onSubmitted: _handleSearch,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: 'Suchen...',
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.8),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+          ],
+        ),
+        body: ListView(
+          children: [
+            // Bild mit Suchleiste
+            Container(
+              height: MediaQuery.of(context).size.height / 3,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/hero.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: TextField(
+                  //controller: _searchController,
+                  onSubmitted: _handleSearch,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Suchen...',
+                    filled: true,
+                    fillColor: Colors.white.withOpacity(0.8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          // Zentrierte Trennlinie über "Featured"
-          Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 16.0),
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: Divider(),
+            // Zentrierte Trennlinie über "Featured"
+            Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 16.0),
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: Divider(),
+              ),
             ),
-          ),
-          // Featured Überschrift zentriert
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text('Meine Reise', style: TextStyle(fontSize: 24)),
+            // Featured Überschrift zentriert
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Meine Reise', style: TextStyle(fontSize: 24)),
+              ),
             ),
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('reisen').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              if (snapshot.hasError) {
-                return Center(child: Text('Fehler: ${snapshot.error}'));
-              }
-
-              String? userId = appDataBloc.state
-                  .userId; // Ihre Methode zur Ermittlung der aktuellen Benutzer-ID
-
-              if (userId != null) {
-                bool userHasTrip = false;
-                for (var doc in snapshot.data!.docs) {
-                  if (doc['owner'] == userId ||
-                      (doc['members'] as List).contains(userId)) {
-                    userHasTrip = true;
-                    _tripId = doc.id;
-                    break;
-                  }
+            StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('reisen').snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
                 }
 
-                return userHasTrip
-                    ? GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TripOverviewPage(
-                                  tripId:
-                                      _tripId // Hier setzen wir den Kategorienamen als Suchbegriff
-                                  ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16.0),
+                if (snapshot.hasError) {
+                  return Center(child: Text('Fehler: ${snapshot.error}'));
+                }
+
+                String? userId = appDataBloc.state
+                    .userId; // Ihre Methode zur Ermittlung der aktuellen Benutzer-ID
+
+                if (userId != null) {
+                  bool userHasTrip = false;
+                  for (var doc in snapshot.data!.docs) {
+                    if (doc['owner'] == userId ||
+                        (doc['members'] as List).contains(userId)) {
+                      userHasTrip = true;
+                      _tripId = doc.id;
+                      break;
+                    }
+                  }
+
+                  return userHasTrip
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripOverviewPage(
+                                    tripId:
+                                        _tripId // Hier setzen wir den Kategorienamen als Suchbegriff
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  border: Border.all(color: Colors.grey)),
+                              child: Image.asset(
+                                  'assets/images/imageplatzhalter.png')))
+                      : GestureDetector(
+                          onTap: _showAddTripSheet,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    16.0), // Fügt einen Rand horizontal hinzu
+                            height: 200,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(color: Colors.grey)),
-                            child: Image.asset(
-                                'assets/images/imageplatzhalter.png')))
-                    : GestureDetector(
-                        onTap: _showAddTripSheet,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal:
-                                  16.0), // Fügt einen Rand horizontal hinzu
-                          height: 200,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors
-                                    .grey), // Definiert die Farbe des Randes
-                            borderRadius: BorderRadius.circular(
-                                12.0), // Rundet die Ecken ab
+                              border: Border.all(
+                                  color: Colors
+                                      .grey), // Definiert die Farbe des Randes
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // Rundet die Ecken ab
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.add,
+                                size: 50,
+                              ), // oder ein geeignetes Symbol
+                            ),
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.add,
-                              size: 50,
-                            ), // oder ein geeignetes Symbol
-                          ),
+                        );
+                } else {
+                  return Center(child: Text('Bitte melden Sie sich an.'));
+                }
+              },
+            ),
+
+            Divider(),
+            // Categories Überschrift zentriert
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Categories', style: TextStyle(fontSize: 24)),
+              ),
+            ),
+            // Grid für Kategorien
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.all(16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: _categories.length,
+              itemBuilder: (context, index) {
+                final category = _categories[index];
+                return ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchResultsPage(
+                          query: category[
+                              'name'], // Hier setzen wir den Kategorienamen als Suchbegriff
                         ),
-                      );
-              } else {
-                return Center(child: Text('Bitte melden Sie sich an.'));
-              }
-            },
-          ),
-
-          Divider(),
-          // Categories Überschrift zentriert
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text('Categories', style: TextStyle(fontSize: 24)),
-            ),
-          ),
-          // Grid für Kategorien
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(16),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: _categories.length,
-            itemBuilder: (context, index) {
-              final category = _categories[index];
-              return ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchResultsPage(
-                        query: category[
-                            'name'], // Hier setzen wir den Kategorienamen als Suchbegriff
                       ),
+                    );
+                  },
+                  child: Image.asset(category['image']),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  );
-                },
-                child: Image.asset(category['image']),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      bottomNavigationBar: CustomBottomBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          switch (index) {
-            case 0:
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => StartPage()),
-                (Route<dynamic> route) => false,
-              );
-              break;
-
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SearchResultsPage(query: ""),
-                ),
-              );
-              break;
-
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      LocationsMap(), // Die Seite, auf der Ihre Karte angezeigt wird
-                ),
-              );
-              // Hier können Sie weitere Navigationen für das Profil hinzufügen
-              break;
-
-            case 3:
-              break;
-          }
-        },
-      ),
-    );
+                );
+              },
+            ),
+          ],
+        ),
+        bottomNavigationBar: CustomBottomBar(currentIndex: _currentIndex));
   }
 
   void _showAddTripSheet() {

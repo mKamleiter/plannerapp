@@ -4,11 +4,10 @@ import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import '../bottom_bar.dart';
-import '../start_page.dart';
-import '../search_results_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app_data_bloc.dart';
 import 'info_panel.dart';
+
 class LocationsMap extends StatefulWidget {
   String? selectedLocationId;
   Map<dynamic, dynamic>? selectedLocation;
@@ -41,47 +40,7 @@ class _LocationsMapState extends State<LocationsMap> {
       final List<dynamic> categories = appData.categories;
       Trip userTrip = appData.userTrip!;
       return Scaffold(
-        bottomNavigationBar: CustomBottomBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-
-            switch (index) {
-              case 0:
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => StartPage()),
-                  (Route<dynamic> route) => false,
-                );
-                break;
-
-              case 1:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchResultsPage(query: ""),
-                  ),
-                );
-                break;
-
-              case 2:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        LocationsMap(), // Die Seite, auf der Ihre Karte angezeigt wird
-                  ),
-                );
-                // Hier können Sie weitere Navigationen für das Profil hinzufügen
-                break;
-
-              case 3:
-                break;
-            }
-          },
-        ),
+        bottomNavigationBar: CustomBottomBar(currentIndex: _currentIndex),
         body: SlidingUpPanel(
             minHeight: pminheight ?? 0,
             maxHeight: MediaQuery.of(context).size.height / 2,
@@ -176,8 +135,7 @@ class _LocationsMapState extends State<LocationsMap> {
                     child: Icon(Icons.filter_list), // Filter-Icon
                     onPressed: () {
                       setState(() {
-                        _filterUserTripLocations =
-                            !_filterUserTripLocations;
+                        _filterUserTripLocations = !_filterUserTripLocations;
                       });
                     },
                   ),
@@ -275,17 +233,18 @@ class _LocationsMapState extends State<LocationsMap> {
 
   List<Marker> _buildMarkers(List locations, List categories, Trip userTrip) {
     return locations.where((location) {
-      if (_filterUserTripLocations && !userTrip.tripLocations.contains(location['id'])) {
-      return false;
-    }
-    if (_selectedCategories.isEmpty) {
-      return true;
-    }
-    for (var category in location['categories']) {
-      if (_selectedCategories.contains(category)) {
+      if (_filterUserTripLocations &&
+          !userTrip.tripLocations.contains(location['id'])) {
+        return false;
+      }
+      if (_selectedCategories.isEmpty) {
         return true;
       }
-    }
+      for (var category in location['categories']) {
+        if (_selectedCategories.contains(category)) {
+          return true;
+        }
+      }
       return false;
     }).map((location) {
       String categoryName = location['categories'][0];
@@ -325,5 +284,4 @@ class _LocationsMapState extends State<LocationsMap> {
       );
     }).toList();
   }
-
 }
