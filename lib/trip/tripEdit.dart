@@ -97,12 +97,12 @@ class _TripEditPageState extends State<TripEditPage> {
                 },
                 itemBuilder: (context, suggestion) {
                   return ListTile(
-                    title: Text(suggestion),
+                    title: Text(suggestion['name']),
                   );
                 },
                 onSuggestionSelected: (suggestion) {
                   setState(() {
-                    _hotelNameController.text = suggestion;
+                    _hotelNameController.text = suggestion['name'];
                   });
                 },
               ),

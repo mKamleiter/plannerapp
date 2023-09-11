@@ -25,7 +25,7 @@ class _StartPageState extends State<StartPage> {
   List _categories = [];
   List _locations = [];
   int _currentIndex = 0;
-  DateTime? _startDate;
+  DateTimeRange? _pickedDateRange;
   DateTime? _endDate;
   String _tripId = "";
   Trip? userTrip;
@@ -327,6 +327,7 @@ class _StartPageState extends State<StartPage> {
     String? _tripName;
     String? _hotelName;
     String? _hotelAddress;
+    String? _hotelId;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -362,40 +363,27 @@ class _StartPageState extends State<StartPage> {
                     },
                     itemBuilder: (context, suggestion) {
                       return ListTile(
-                        title: Text(suggestion),
+                        title: Text(suggestion['name']),
                       );
                     },
                     onSuggestionSelected: (suggestion) {
                       setState(() {
-                        _hotelName = suggestion;
-                        _hotelNameController.text = suggestion;
-                      });
-                    },
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Hoteladresse',
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _hotelAddress = value;
+                        _hotelName = suggestion['name'];
+                        _hotelNameController.text = suggestion['name'];
+                        _hotelId = suggestion['id'];
                       });
                     },
                   ),
                   ElevatedButton(
-                    onPressed: () => _selectStartDate(context),
-                    child: Text(_startDate == null ? 'Startdatum auswählen' : 'Start: ${_startDate!.toLocal().toString().split(' ')[0]}'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _selectEndDate(context),
-                    child: Text(_endDate == null ? 'Enddatum auswählen' : 'Ende: ${_endDate!.toLocal().toString().split(' ')[0]}'),
+                    onPressed: () => _selectDate(context),
+                    child: Text(_pickedDateRange?.start == null ? 'Startdatum auswählen' : 'Start: ${_pickedDateRange!.start.toLocal().toString().split(' ')[0]}'),
                   ),
                   // Hier fügen Sie Ihre Datumsauswahlfelder hinzu
                   // ...
                   ElevatedButton(
                     onPressed: () {
-                      if (_startDate != null && _endDate != null) {
-                        _addNewTrip(_tripName, _startDate!, _endDate!, _hotelName!, _hotelAddress!);
+                      if (_pickedDateRange?.start != null && _pickedDateRange?.end != null) {
+                        _addNewTrip(_tripName, _pickedDateRange!.start, _pickedDateRange!.end, _hotelId!);
                         Navigator.pop(context);
                       }
                     },
@@ -408,10 +396,9 @@ class _StartPageState extends State<StartPage> {
         });
   }
 
-  Future<void> _addNewTrip(String? name, DateTime startDate, DateTime endDate, String hotelName, String hotelAddress) async {
+  Future<void> _addNewTrip(String? name, DateTime startDate, DateTime endDate, String hotelId) async {
     try {
       String? userId = await _getCurrentUserId();
-      Hotel hotel = Hotel(name: hotelName, address: hotelAddress);
       if (userId != null) {
         await FirebaseFirestore.instance.collection('reisen').add({
           'name': name,
@@ -420,10 +407,7 @@ class _StartPageState extends State<StartPage> {
           'locations': [],
           'startdate': startDate,
           'enddate': endDate,
-          'hotel': {
-            'name': hotelName,
-            'address': hotelAddress,
-          },
+          'hotelId': hotelId
         });
       }
     } catch (e) {
@@ -431,33 +415,20 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
-  Future<void> _selectStartDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+  Future<void> _selectDate(BuildContext context) async {
+    DateTimeRange? pickedDate = await showDateRangePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDateRange: DateTimeRange(start: DateTime.now(), end: DateTime.now()),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
-    if (pickedDate != null && pickedDate != _startDate) {
+    if (pickedDate != null && pickedDate != _pickedDateRange) {
       setState(() {
-        _startDate = pickedDate;
+        _pickedDateRange = pickedDate;
       });
     }
   }
+  
 
-  Future<void> _selectEndDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _startDate ?? DateTime.now(),
-      firstDate: _startDate ?? DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (pickedDate != null && pickedDate != _endDate) {
-      setState(() {
-        _endDate = pickedDate;
-      });
-    }
-  }
 }
