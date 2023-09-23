@@ -64,6 +64,8 @@ class _SettingsTabState extends State<SettingsTab> {
           Divider(),
           Text('Besitzer'),
           Text(userTrip.owner),
+          Text('Hotel'),
+          Text(userTrip.hotelId),
           Divider(),
           ElevatedButton(
             onPressed: () => _editTrip(userTrip),

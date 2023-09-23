@@ -29,8 +29,8 @@ class _TripEditPageState extends State<TripEditPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.userTrip.tripName);
-    _hotelNameController = TextEditingController(text: widget.userTrip.hotel.name);
-    _hotelAddressController = TextEditingController(text: widget.userTrip.hotel.address);
+    _hotelNameController = TextEditingController(text: "demo");
+    _hotelAddressController = TextEditingController(text: "demo");
     _startDate = widget.userTrip.startDate;
     _endDate = widget.userTrip.endDate;
   }
@@ -61,14 +61,12 @@ class _TripEditPageState extends State<TripEditPage> {
     widget.userTrip.endDate = _endDate;
     widget.userTrip.startDate = _startDate;
     widget.userTrip.tripName = _nameController.text;
-    widget.userTrip.hotel.name = _hotelNameController.text;
-    widget.userTrip.hotel.address = _hotelAddressController.text;
     BlocProvider.of<AppDataBloc>(context).add(SetUserTrip(widget.userTrip));
     Navigator.pop(context, {
       "tripName": _nameController.text,
       "startDate": _startDate,
       "endDate": _endDate,
-      "hotel": {"name": _hotelNameController.text, "address": _hotelAddressController.text}
+      "hotelId": "foo"
     });
   }
 

@@ -15,6 +15,9 @@ import 'trip/trip_overview_page.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mallorcaplanner/trip/hotelsuggestions.dart';
 
+import 'package:mallorcaplanner/helper/getCurrentUser.dart';
+import 'package:mallorcaplanner/trip/addNewTrip.dart';
+import 'package:mallorcaplanner/helper/loadStartup.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -23,12 +26,12 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   List _categories = [];
-  List _locations = [];
   int _currentIndex = 0;
   DateTimeRange? _pickedDateRange;
   DateTime? _endDate;
   String _tripId = "";
   Trip? userTrip;
+  String? userId;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //final TextEditingController _searchController = TextEditingController();
@@ -39,78 +42,14 @@ class _StartPageState extends State<StartPage> {
     _loadData();
   }
 
-  Future<List<Map<String, dynamic>>> _loadLocationsFromFirestore() async {
-    List<Map<String, dynamic>> locations = [];
-    CollectionReference collectionRef = FirebaseFirestore.instance.collection('locations');
-    QuerySnapshot querySnapshot = await collectionRef.get();
-
-    for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      data['id'] = doc.id; // Fügt die Dokument-ID als "id" hinzu
-
-      // Konvertieren Sie Geopoint in Breiten- und Längengrade
-      if (data['location'] is GeoPoint) {
-        data['latitude'] = (data['location'] as GeoPoint).latitude;
-        data['longitude'] = (data['location'] as GeoPoint).longitude;
-        data.remove('location'); // Entfernt den Geopunkt aus den Daten
-      }
-
-      locations.add(data);
-    }
-
-    return locations;
-  }
-
-  Future<List<Map<String, dynamic>>> _loadCategoriesFromFirestore() async {
-    List<Map<String, dynamic>> categories = [];
-    CollectionReference collectionRef = FirebaseFirestore.instance.collection('categories');
-    QuerySnapshot querySnapshot = await collectionRef.get();
-
-    for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      data['id'] = doc.id; // Fügt die Dokument-ID als "id" hinzu
-
-      categories.add(data);
-    }
-
-    return categories;
-  }
-
-  Future<Trip> _loadUserTripFromFirestore(String? userId) async {
-    Trip userTrip=Trip(tripName: "", startDate: DateTime.now(), endDate: DateTime.now(), owner: "", tripLocations: [""], id: "", hotel: Hotel(address: "", name: ""));
-    CollectionReference reisen = FirebaseFirestore.instance.collection('reisen');
-
-    QuerySnapshot querySnapshot = await reisen.where('owner', isEqualTo: userId).get();
-    try {
-      Map<String, dynamic> data = querySnapshot.docs[0].data() as Map<String, dynamic>;
-      userTrip.endDate = data['enddate'].toDate();
-      userTrip.startDate = data['startdate'].toDate();
-      userTrip.owner = data['owner'];
-      userTrip.tripName = data['name'];
-      userTrip.tripLocations = data['locations'];
-      userTrip.id = querySnapshot.docs[0].id;
-      userTrip.hotel = Hotel(name: data['hotel']['name'], address: data['hotel']['address']);
-      
-      
-    } catch (e) {
-      print("Error loading user trip data: $e");
-    }
-    return userTrip;
-  }
-
   void _loadData() async {
-    String categoriesJson = await rootBundle.loadString('assets/categories.json');
-
-    // String locationsJson = await rootBundle.loadString('assets/locations.json');
-    // List<dynamic> locationsData = json.decode(locationsJson);
 
     final appDataBloc = BlocProvider.of<AppDataBloc>(context);
-    _loadLocationsFromFirestore().then((locations) {
+    loadLocationsFromFirestore().then((locations) {
       appDataBloc.add(UpdateLocations(locations));
-      setState(() => _locations = locations);
     });
 
-    _loadCategoriesFromFirestore().then((categories) {
+    loadCategoriesFromFirestore().then((categories) {
       appDataBloc.add(UpdateCategories(categories));
       setState(() => _categories = categories);
     });
@@ -118,14 +57,20 @@ class _StartPageState extends State<StartPage> {
     // appDataBloc.add(UpdateLocations(locationsData));
     //appDataBloc.add(UpdateCategories(categoriesData));
 
-    String? fetchedUserId = await _getCurrentUserId();
+    String? fetchedUserId = await getCurrentUserId(_auth);
     if (fetchedUserId != null) {
       BlocProvider.of<AppDataBloc>(context).add(UpdateUserId(fetchedUserId));
     }
 
-    _loadUserTripFromFirestore(fetchedUserId).then((userTrip) {
-        appDataBloc.add(SetUserTrip(userTrip));
-        setState(() => userTrip = userTrip);
+    loadUserTripFromFirestore(fetchedUserId).then((userTrip) {
+      appDataBloc.add(SetUserTrip(userTrip));
+      setState(() {
+        userTrip;
+      });
+    });
+
+    setState(() {
+      userId = fetchedUserId!;
     });
   }
 
@@ -139,16 +84,6 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
     );
-  }
-
-  Future<String?> _getCurrentUserId() async {
-    try {
-      final user = _auth.currentUser;
-      return user?.uid;
-    } catch (error) {
-      print("Error getting user ID: $error");
-      return null;
-    }
   }
 
   @override
@@ -383,7 +318,7 @@ class _StartPageState extends State<StartPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_pickedDateRange?.start != null && _pickedDateRange?.end != null) {
-                        _addNewTrip(_tripName, _pickedDateRange!.start, _pickedDateRange!.end, _hotelId!);
+                        addNewTrip(_tripName, _pickedDateRange!.start, _pickedDateRange!.end, _hotelId!, userId!);
                         Navigator.pop(context);
                       }
                     },
@@ -394,25 +329,6 @@ class _StartPageState extends State<StartPage> {
             ),
           );
         });
-  }
-
-  Future<void> _addNewTrip(String? name, DateTime startDate, DateTime endDate, String hotelId) async {
-    try {
-      String? userId = await _getCurrentUserId();
-      if (userId != null) {
-        await FirebaseFirestore.instance.collection('reisen').add({
-          'name': name,
-          'owner': userId,
-          'member': [],
-          'locations': [],
-          'startdate': startDate,
-          'enddate': endDate,
-          'hotelId': hotelId
-        });
-      }
-    } catch (e) {
-      print("Fehler beim Hinzufügen einer neuen Reise: $e");
-    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -429,6 +345,4 @@ class _StartPageState extends State<StartPage> {
       });
     }
   }
-  
-
 }

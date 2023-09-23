@@ -86,7 +86,7 @@ class Trip {
   String owner;
   List<dynamic> tripLocations;
   String id;
-  Hotel hotel;
+  String hotelId;
   Trip({
     required this.tripName,
     required this.startDate,
@@ -94,7 +94,7 @@ class Trip {
     required this.owner,
     required this.tripLocations,
     required this.id,
-    required this.hotel
+    required this.hotelId
   });
 }
 

@@ -46,7 +46,7 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
         tripLocations: tripDocument['locations'],
         owner: tripDocument['owner'],
         id: tripDocument.id,
-        hotel:  Hotel(name: tripDocument['hotel']['name'], address: tripDocument['hotel']['address'])
+        hotelId: tripDocument['hotelId'],
 
       );
       BlocProvider.of<AppDataBloc>(context).add(SetUserTrip(userTrip));
