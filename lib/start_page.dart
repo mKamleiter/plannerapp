@@ -5,7 +5,6 @@ import 'package:mallorcaplanner/profile_page.dart';
 import 'bottom_bar.dart';
 import 'search_results_page.dart';
 import 'details_page.dart';
-import 'map/location_map.dart';
 import 'app_data_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_google.dart';

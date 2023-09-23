@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'map/location_map.dart';
+import 'package:mallorcaplanner/presentation/screens/map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app_data_bloc.dart';
@@ -132,8 +132,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => LocationsMap(
-                    selectedLocationId: widget.location['id'],
-                    selectedLocation: widget.location,
+                    selectedLocationId: widget.location['id'],  // TODO: add selected Location
                     zoomLevel: 18.0,
                     center: LatLng(
                       widget.location['latitude'],

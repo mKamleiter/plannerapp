@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mallorcaplanner/presentation/screens/map.dart';
 import 'start_page.dart';
 import 'search_results_page.dart';
-import 'map/location_map.dart';
+
 
 class CustomBottomBar extends StatelessWidget {
   final int currentIndex;
