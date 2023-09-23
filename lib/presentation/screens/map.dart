@@ -54,17 +54,19 @@ class _LocationsMapState extends State<LocationsMap> {
   Widget build(BuildContext context) {
     return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
       if (state is MapLoading) {
-        return FlutterMap(
-            mapController: mapController,
-            options: MapOptions(
-              center: widget.center ?? LatLng(39.5153, 2.7471),
-              zoom: widget.zoomLevel ?? 15.0,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: "https://api.mapbox.com/styles/v1/mkamleiter/clltqs61w00b601nzc36eg8ib/draft/tiles/{z}/{x}/{y}?access_token=sk.eyJ1IjoibWthbWxlaXRlciIsImEiOiJjbGx3dXNydDcwMzJmM2RwZzBpcG1rczBiIn0.r4F5JI-jpyoibpWvkfAj-Q",
-              ),
-            ]);
+        return Scaffold(
+            bottomNavigationBar: CustomBottomBar(currentIndex: _currentIndex),
+            body: FlutterMap(
+                mapController: mapController,
+                options: MapOptions(
+                  center: widget.center ?? LatLng(39.5153, 2.7471),
+                  zoom: widget.zoomLevel ?? 15.0,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: "https://api.mapbox.com/styles/v1/mkamleiter/clltqs61w00b601nzc36eg8ib/draft/tiles/{z}/{x}/{y}?access_token=sk.eyJ1IjoibWthbWxlaXRlciIsImEiOiJjbGx3dXNydDcwMzJmM2RwZzBpcG1rczBiIn0.r4F5JI-jpyoibpWvkfAj-Q",
+                  ),
+                ]));
       } else if (state is MapLoaded) {
         final locations = state.locations;
         final categories = state.categories;
