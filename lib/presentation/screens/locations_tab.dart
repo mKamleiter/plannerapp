@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
-import 'package:mallorcaplanner/bloc/trip/trip_event.dart';
-import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
-import 'package:mallorcaplanner/helper/images.dart';
-import 'package:mallorcaplanner/details_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mallorcaplanner/app_data_bloc.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
 import 'package:mallorcaplanner/use_cases/get_location_category_images.dart';
 // (Fügen Sie hier weitere benötigte Importe ein...)
 

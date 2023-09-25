@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_event.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/presentation/screens/settings_tab.dart';
+
 import 'locations_tab.dart';
 
 class TripOverviewPage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<TripBloc, TripState>(builder: (context, state) {
       if (state is TripLoading) {
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
       } else if (state is TripLoaded) {
         final trip = state.trip;
         return DefaultTabController(
@@ -43,7 +43,7 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
             child: Scaffold(
               appBar: AppBar(
                 title: Text(trip.name),
-                bottom: TabBar(
+                bottom: const TabBar(
                   tabs: [
                     Tab(text: "Info"),
                     Tab(text: "Settings"),
@@ -53,7 +53,7 @@ class _TripOverviewPageState extends State<TripOverviewPage> {
               body: TabBarView(
                 children: [
                   LocationTab(),
-                  SettingsTab(),
+                  const SettingsTab(),
                 ],
               ),
             ));

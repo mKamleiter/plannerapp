@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:mallorcaplanner/entities/category.dart';
 import 'package:mallorcaplanner/entities/location.dart';
 
@@ -26,7 +25,6 @@ class LocationMarker {
   Marker build() {
     double markerSize = isSelected ? 30.0 : 30.0; // Sie können die Größe basierend auf dem isSelected-Status anpassen
     Color markerColor = isSelected ? Colors.blue : (isInTrip ? Colors.green : Colors.black87);
-    print(selectedCategories);
     return Marker(
       width: markerSize,
       height: markerSize,
