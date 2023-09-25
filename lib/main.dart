@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mallorcaplanner/bloc/map_bloc/map_bloc.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_category_repository.dart';
+import 'package:mallorcaplanner/data/repositories/firebase_hotel_repository.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_location_repository.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_trip_repository.dart';
 import 'package:mallorcaplanner/domain/repositories/category_repository.dart';
@@ -24,13 +26,17 @@ class MyApp extends StatelessWidget {
   final locationRepository = FirebaseLocationRepository();
   final categoryRepository = FirebaseCategoryRepository();
   final tripRepository = FirebaseTripRepository();
+  final hotelRepository = FirebaseHotelRepository();
 
   final AppDataBloc appDataBloc = AppDataBloc();
   late final MapBloc mapBloc;
+  late final TripBloc tripBloc;
+
   // This widget is the root of your application.
 
   MyApp() {
     mapBloc = MapBloc(locationRepository, categoryRepository, tripRepository);
+    tripBloc = TripBloc(tripRepository, locationRepository, categoryRepository, hotelRepository);
   }
 
   @override
@@ -39,6 +45,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<MapBloc>(
           create: (context) => mapBloc,
+        ),
+        BlocProvider<TripBloc>(
+          create: (context) => tripBloc,
         ),
         BlocProvider<AppDataBloc>(create: (context) => appDataBloc)
       ],

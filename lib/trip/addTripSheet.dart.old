@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import 'package:mallorcaplanner/trip/hotelsuggestions.dart';
-import 'package:mallorcaplanner/trip/addNewTrip.dart';
+import 'package:mallorcaplanner/trip/addNewTrip.dart.old';
 
 // Importieren Sie weitere benötigte Pakete hier
 

@@ -10,12 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_google.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'trip/trip_overview_page.dart';
+import 'package:mallorcaplanner/presentation/screens/trip_overview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:mallorcaplanner/trip/hotelsuggestions.dart';
-
 import 'package:mallorcaplanner/helper/getCurrentUser.dart';
-import 'package:mallorcaplanner/trip/addNewTrip.dart';
+//import 'package:mallorcaplanner/trip/addNewTrip.dart.old';
 import 'package:mallorcaplanner/helper/loadStartup.dart';
 
 class StartPage extends StatefulWidget {
@@ -293,18 +291,19 @@ class _StartPageState extends State<StartPage> {
                       },
                     ),
                     suggestionsCallback: (pattern) async {
-                      return await getHotelSuggestions(pattern);
+                      print("adfs");
+                      throw("erorr");
                     },
                     itemBuilder: (context, suggestion) {
                       return ListTile(
-                        title: Text(suggestion['name']),
+                        title: Text("test"), //suggestion['name']),
                       );
                     },
                     onSuggestionSelected: (suggestion) {
                       setState(() {
-                        _hotelName = suggestion['name'];
-                        _hotelNameController.text = suggestion['name'];
-                        _hotelId = suggestion['id'];
+                        _hotelName = "test"; //suggestion['name'];
+                        _hotelNameController.text = "test"; //suggestion['name'];
+                        _hotelId = "test"; //suggestion['id'];
                       });
                     },
                   ),
@@ -317,7 +316,7 @@ class _StartPageState extends State<StartPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_pickedDateRange?.start != null && _pickedDateRange?.end != null) {
-                        addNewTrip(_tripName, _pickedDateRange!.start, _pickedDateRange!.end, _hotelId!, userId!);
+                        //addNewTrip(_tripName, _pickedDateRange!.start, _pickedDateRange!.end, _hotelId!, userId!);
                         Navigator.pop(context);
                       }
                     },

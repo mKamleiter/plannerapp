@@ -20,9 +20,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       yield MapLoading();
       try {
         final locations = await locationRepository.getAllLocations();
-        print(locations);
         final categories = await categoryRepository.getAllCategories();
-        print(categories);
         final trip = await tripRepository.getTripByCurrentUser();
         yield MapLoaded(locations, categories, trip);
       } catch (e) {

@@ -2,14 +2,13 @@
 
 import 'package:mallorcaplanner/domain/repositories/hotel_repository.dart';
 import 'package:mallorcaplanner/entities/hotel.dart';
-import 'package:mallorcaplanner/entities/trip.dart';
 
-class GetHotelByTrip {
+class GetHotelByName {
   final HotelRepository repository;
 
-  GetHotelByTrip(this.repository);
+  GetHotelByName(this.repository);
 
-  Future<Hotel> call(Trip trip) async {
-    return await repository.getHotelByTrip(trip);
+  Future<Hotel> call(String name) async {
+    return await repository.getHotelByName(name);
   }
 }

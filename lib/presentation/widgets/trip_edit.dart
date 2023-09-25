@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-
-import 'package:mallorcaplanner/app_data_bloc.dart';
-
-import 'package:mallorcaplanner/trip/hotelsuggestions.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_event.dart';
+import 'package:mallorcaplanner/data/repositories/firebase_hotel_repository.dart';
+import 'package:mallorcaplanner/entities/hotel.dart';
+import 'package:mallorcaplanner/entities/trip.dart';
 
 class TripEditPage extends StatefulWidget {
-  Trip userTrip;
+  final Trip trip;
+  final Hotel hotel;
 
   TripEditPage({
-    required this.userTrip,
+    required this.trip,
+    required this.hotel,
   });
 
   @override
@@ -19,6 +22,8 @@ class TripEditPage extends StatefulWidget {
 }
 
 class _TripEditPageState extends State<TripEditPage> {
+  final hotelRepository = FirebaseHotelRepository();
+
   late TextEditingController _nameController;
   late TextEditingController _hotelNameController;
   late TextEditingController _hotelAddressController;
@@ -28,46 +33,48 @@ class _TripEditPageState extends State<TripEditPage> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.userTrip.tripName);
-    _hotelNameController = TextEditingController(text: "demo");
-    _hotelAddressController = TextEditingController(text: "demo");
-    _startDate = widget.userTrip.startDate;
-    _endDate = widget.userTrip.endDate;
+
+    // Initialisieren Sie die Controller mit den Daten von trip
+    _nameController = TextEditingController(text: widget.trip.name);
+    _hotelNameController = TextEditingController(text: widget.hotel.displayName);
+    _hotelAddressController = TextEditingController(text: widget.hotel.address);
+    _startDate = widget.trip.startDate;
+    _endDate = widget.trip.endDate;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _hotelNameController.dispose();
+    _hotelAddressController.dispose();
     super.dispose();
   }
 
-  Future<void> _updateTrip() async {
-    try {
-      String? userId = BlocProvider.of<AppDataBloc>(context).state.userId;
-      if (userId != null) {
-        await FirebaseFirestore.instance.collection('reisen').doc(widget.userTrip.id).update({
-          'name': _nameController.text,
-          'startdate': _startDate,
-          'enddate': _endDate,
-          'hotel': {
-            'name': _hotelNameController.text,
-            'address': _hotelAddressController.text,
-          },
-        });
-      }
-    } catch (e) {
-      print("Fehler beim Aktualisieren der Reise: $e");
+  void _updateTrip(Trip tripToUpdate) async{
+    Hotel newHotel = widget.hotel;
+    if (widget.hotel.displayName != _hotelNameController.text) {
+      newHotel = await hotelRepository.getHotelByName(_hotelNameController.text);
     }
-    widget.userTrip.endDate = _endDate;
-    widget.userTrip.startDate = _startDate;
-    widget.userTrip.tripName = _nameController.text;
-    BlocProvider.of<AppDataBloc>(context).add(SetUserTrip(widget.userTrip));
-    Navigator.pop(context, {
-      "tripName": _nameController.text,
-      "startDate": _startDate,
-      "endDate": _endDate,
-      "hotelId": "foo"
-    });
+    // Erstellen Sie ein aktualisiertes Trip-Objekt
+    Trip updatedTrip = Trip(
+        id: widget.trip.id,
+        name: _nameController.text,
+        startDate: _startDate,
+        owner: tripToUpdate.owner,
+        endDate: _endDate,
+        locations: tripToUpdate.locations,
+        // Hier nehmen wir an, dass Sie eine Hotel-Entität oder ein ähnliches Objekt haben
+        hotel: newHotel.id
+        // Fügen Sie zusätzliche Felder hinzu, falls vorhanden
+        );
+
+    print("Update");
+
+    // Verwenden Sie den TripBloc, um den Trip zu aktualisieren
+    BlocProvider.of<TripBloc>(context).add(UpdateTripEvent(updatedTrip));
+
+    // Schließen Sie die Seite
+    Navigator.pop(context);
   }
 
   @override
@@ -91,16 +98,17 @@ class _TripEditPageState extends State<TripEditPage> {
                   decoration: InputDecoration(labelText: 'Hotelname'),
                 ),
                 suggestionsCallback: (pattern) async {
-                  return await getHotelSuggestions(pattern);
+                  return await hotelRepository.getHotelSuggestions(pattern);
                 },
                 itemBuilder: (context, suggestion) {
                   return ListTile(
-                    title: Text(suggestion['name']),
+                    title: Text(suggestion.displayName),
                   );
                 },
                 onSuggestionSelected: (suggestion) {
                   setState(() {
-                    _hotelNameController.text = suggestion['name'];
+                    _hotelNameController.text = suggestion.displayName;
+                    _hotelAddressController.text = suggestion.address;
                   });
                 },
               ),
@@ -113,7 +121,7 @@ class _TripEditPageState extends State<TripEditPage> {
                 onPressed: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: widget.userTrip.startDate,
+                    initialDate: widget.trip.startDate,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
@@ -130,7 +138,7 @@ class _TripEditPageState extends State<TripEditPage> {
                 onPressed: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: widget.userTrip.endDate,
+                    initialDate: widget.trip.endDate,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
@@ -144,7 +152,7 @@ class _TripEditPageState extends State<TripEditPage> {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: _updateTrip,
+                onPressed: () => _updateTrip(widget.trip),
                 child: Text('Änderungen speichern'),
               ),
             ],

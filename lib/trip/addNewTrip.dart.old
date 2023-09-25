@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:mallorcaplanner/trip/hotelsuggestions.dart';
 
 Future<void> addNewTrip(String? name, DateTime startDate, DateTime endDate, String hotelId, String userId) async {
   try {

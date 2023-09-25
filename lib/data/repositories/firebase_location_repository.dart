@@ -1,7 +1,6 @@
 // lib/data/repositories/firebase_location_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mallorcaplanner/domain/repositories/location_repository.dart';
 import 'package:mallorcaplanner/entities/location.dart';

@@ -30,4 +30,19 @@ class FirebaseTripRepository implements TripRepository {
     data['locations'] = locations;
     return Trip.fromFirestore(data);
   }
+
+  @override
+  Future<void> editTrip(Trip trip) async {
+    await FirebaseFirestore.instance.collection('reisen').doc(trip.id).update({
+      'name': trip.name,
+      'startdate': trip.startDate,
+      'enddate': trip.endDate,
+      'hotelId': trip.hotel,
+    });
+  }
+
+  @override
+  Future<void> deleteTrip(Trip trip) async {
+    // Implementieren Sie die Logik zum Löschen eines Trips in Firebase
+  }
 }
