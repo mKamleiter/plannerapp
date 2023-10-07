@@ -1,13 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/bloc/profile/profile_bloc.dart';
 import 'package:mallorcaplanner/bloc/profile/profile_event.dart';
 import 'package:mallorcaplanner/bloc/profile/profile_state.dart';
 import 'package:mallorcaplanner/presentation/widgets/bottom_bar.dart';
 import 'package:mallorcaplanner/use_cases/auth_google.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -34,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
         return const CircularProgressIndicator();
       } else if (state is ProfileLoaded) {
         return Scaffold(
-            appBar: AppBar(title: Text('Profil & Einstellungen')),
+            appBar: AppBar(title: const Text('Profil & Einstellungen')),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center, // Zentriert die Buttons vertikal
@@ -48,9 +46,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         print("Fehler beim Einloggen");
                       }
                     },
-                    child: Text("Mit Google anmelden"),
+                    child: const Text("Mit Google anmelden"),
                   ),
-                  SizedBox(height: 20), // Fügt einen vertikalen Abstand zwischen den Buttons hinzu
+                  const SizedBox(height: 20), // Fügt einen vertikalen Abstand zwischen den Buttons hinzu
                   TextButton(
                     onPressed: () async {
                       String? fetchedUserId = await _getCurrentUserId();
@@ -63,14 +61,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         print("User not logged in");
                       }
                     },
-                    child: Text("Get User ID"),
+                    child: const Text("Get User ID"),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(userId ?? "No User ID available"),
-                  SizedBox(height: 20), // Einen weiteren Abstand hinzufügen
+                  const SizedBox(height: 20), // Einen weiteren Abstand hinzufügen
                   // Anzeige des AppDataBloc-Zustands
-                  Text("AppDataBloc State:"),
-                  Text("User ID: "), // Zeigt die userId aus dem Zustand an
+                  const Text("AppDataBloc State:"),
+                  const Text("User ID: "), // Zeigt die userId aus dem Zustand an
                   // Text(
                   //     "Locations: ${appDataBloc.state.locations}"), // Zeigt die locations aus dem Zustand an
                   // Text(

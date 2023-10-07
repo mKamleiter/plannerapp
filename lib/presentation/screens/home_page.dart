@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mallorcaplanner/bloc/homepage/home_page_bloc.dart';
 import 'package:mallorcaplanner/bloc/homepage/home_page_event.dart';
 import 'package:mallorcaplanner/bloc/homepage/home_page_state.dart';
@@ -12,7 +9,6 @@ import 'package:mallorcaplanner/presentation/screens/profile.dart';
 import 'package:mallorcaplanner/presentation/screens/search_results.dart';
 import 'package:mallorcaplanner/presentation/screens/trip_overview.dart';
 import 'package:mallorcaplanner/presentation/widgets/bottom_bar.dart';
-import 'package:mallorcaplanner/use_cases/get_hotel_suggestions.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -20,14 +16,11 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  List _categories = [];
-  int _currentIndex = 0;
-  DateTimeRange? _pickedDateRange;
-  DateTime? _endDate;
-  String _tripId = "";
+  final List _categories = [];
+  final int _currentIndex = 0;
+  final String _tripId = "";
   Trip? userTrip;
   String? userId;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   //final TextEditingController _searchController = TextEditingController();
   final hotelRepository = FirebaseHotelRepository();
 
@@ -43,13 +36,12 @@ class _HomepageState extends State<Homepage> {
       if (state is HomepageLoading) {
         return const CircularProgressIndicator();
       } else if (state is HomepageLoaded) {
-        final trip = state.trip;
         return Scaffold(
             appBar: AppBar(
-              title: Text('Planlos'),
+              title: const Text('Planlos'),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.account_circle),
+                  icon: const Icon(Icons.account_circle),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -64,7 +56,7 @@ class _HomepageState extends State<Homepage> {
                 // Bild mit Suchleiste
                 Container(
                   height: MediaQuery.of(context).size.height / 3,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/hero.png'),
                       fit: BoxFit.cover,
@@ -79,7 +71,7 @@ class _HomepageState extends State<Homepage> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResultsPage(query: query)));
                       },
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         hintText: 'Suchen...',
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.8),
@@ -95,13 +87,13 @@ class _HomepageState extends State<Homepage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 16.0),
                     width: MediaQuery.of(context).size.width * 0.6,
-                    child: Divider(),
+                    child: const Divider(),
                   ),
                 ),
                 // Featured Überschrift zentriert
-                Center(
+                const Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Text('Meine Reise', style: TextStyle(fontSize: 24)),
                   ),
                 ),
@@ -116,23 +108,23 @@ class _HomepageState extends State<Homepage> {
                       );
                     },
                     child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0), border: Border.all(color: Colors.grey)),
                         child: Image.asset('assets/images/imageplatzhalter.png'))),
-                Divider(),
+                const Divider(),
                 // Categories Überschrift zentriert
-                Center(
+                const Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Text('Categories', style: TextStyle(fontSize: 24)),
                   ),
                 ),
                 // Grid für Kategorien
                 GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(16),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     childAspectRatio: 1,
                     crossAxisSpacing: 16,

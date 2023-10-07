@@ -4,7 +4,6 @@ import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
 import 'package:mallorcaplanner/presentation/screens/details_page.dart';
 import 'package:mallorcaplanner/use_cases/get_images_of_categories.dart';
-import 'package:mallorcaplanner/use_cases/get_location_category_images.dart';
 // (Fügen Sie hier weitere benötigte Importe ein...)
 
 class LocationTab extends StatefulWidget {

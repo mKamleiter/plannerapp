@@ -42,5 +42,6 @@ class AuthService {
       print(error);
       return null;
     }
+    return null;
   }
 }

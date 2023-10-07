@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mallorcaplanner/bloc/trip/trip_event.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_event.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
-import 'package:mallorcaplanner/entities/hotel.dart';
-import 'package:mallorcaplanner/entities/trip.dart';
 import 'package:mallorcaplanner/presentation/widgets/trip_edit.dart';
 
 class SettingsTab extends StatefulWidget {
@@ -15,27 +13,6 @@ class SettingsTab extends StatefulWidget {
 }
 
 class _SettingsTabState extends State<SettingsTab> {
-  void _editTrip(Trip trip, Hotel hotel) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TripEditPage(
-          trip: trip,
-          hotel: hotel,
-        ),
-      ),
-    );
-
-    // if (result != null) {
-    //   // Hier können Sie den result-Wert verwenden, um den Trip zu bearbeiten
-    //   editTripUseCase(trip);
-    // }
-  }
-
-  void _deleteTrip(Trip trip) async {
-    //await deleteTripUseCase(trip);
-    Navigator.of(context).pop(); // Zurück zur vorherigen Seite
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +37,11 @@ class _SettingsTabState extends State<SettingsTab> {
               Text(trip.hotel),
               const Divider(),
               ElevatedButton(
-                onPressed: () => _editTrip(trip, hotel),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TripEditPage(trip: trip, hotel: hotel)));
+                },
+
+                //=> _editTrip(trip, hotel),
                 child: const Text('Trip bearbeiten'),
               ),
               const Divider(),

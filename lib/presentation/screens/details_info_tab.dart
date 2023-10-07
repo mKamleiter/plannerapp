@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/bloc/details/details_bloc.dart';
 import 'package:mallorcaplanner/bloc/details/details_state.dart';
-import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
-import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
 import 'package:mallorcaplanner/entities/location.dart';
 import 'package:mallorcaplanner/presentation/screens/map.dart';
 import 'package:mallorcaplanner/presentation/widgets/opening_hours.dart';
-import 'package:mallorcaplanner/use_cases/get_location_category_images.dart';
 // (Fügen Sie hier weitere benötigte Importe ein...)
 
 class DetailsInfo extends StatefulWidget {
@@ -31,8 +28,6 @@ class _DetailsInfoState extends State<DetailsInfo> {
       if (state is DetailsLoading) {
         return CircularProgressIndicator();
       } else if (state is DetailsLoaded) {
-        final trip = state.trip;
-        final categories = state.categories;
 
         return Container(
           margin: EdgeInsets.all(16.0), // Rand um den Container

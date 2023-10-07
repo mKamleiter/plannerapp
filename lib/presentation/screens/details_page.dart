@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/bloc/details/details_bloc.dart';
 import 'package:mallorcaplanner/bloc/details/details_event.dart';
 import 'package:mallorcaplanner/bloc/details/details_state.dart';
 import 'package:mallorcaplanner/entities/location.dart';
 import 'package:mallorcaplanner/presentation/screens/details_images.dart';
 import 'package:mallorcaplanner/presentation/screens/details_info_tab.dart';
-import 'package:mallorcaplanner/presentation/screens/map.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailsPage extends StatefulWidget {
   final Location location;
@@ -41,7 +39,7 @@ class _DetailsPageState extends State<DetailsPage> {
           child: Scaffold(
             appBar: AppBar(
               title: Text(widget.location.displayName),
-              bottom: TabBar(
+              bottom: const TabBar(
                 tabs: [
                   Tab(text: "Info"),
                   Tab(text: "Bilder"),
