@@ -40,5 +40,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         yield MapError(e.toString());
       }
     }
+    
   }
 }

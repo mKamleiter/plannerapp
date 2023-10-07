@@ -8,7 +8,7 @@ class GetHotelSuggestions {
 
   GetHotelSuggestions(this.repository);
 
-  Future<List<Hotel>> call(String tripId) async {
-    return await repository.getHotelSuggestions(tripId);
+  Future<List<Hotel>> call(String query) async {
+    return await repository.getHotelSuggestions(query);
   }
 }

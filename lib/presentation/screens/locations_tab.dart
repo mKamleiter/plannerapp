@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
+import 'package:mallorcaplanner/presentation/screens/details_page.dart';
+import 'package:mallorcaplanner/use_cases/get_images_of_categories.dart';
 import 'package:mallorcaplanner/use_cases/get_location_category_images.dart';
 // (Fügen Sie hier weitere benötigte Importe ein...)
 
@@ -16,7 +18,6 @@ class _LocationTabState extends State<LocationTab> {
   @override
   void initState() {
     super.initState();
-    //context.read<TripBloc>().add(LoadTripDetailsEvent());
   }
 
   @override
@@ -71,17 +72,16 @@ class _LocationTabState extends State<LocationTab> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        // TODO: enable link to details page, once details is migrated
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => DetailsPage(
-                        //       location: locations.firstWhere(
-                        //         (entry) => entry.id == trip.locations[index],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(
+                              location: locations.firstWhere(
+                                (entry) => entry.id == trip.locations[index],
+                              ),
+                            ),
+                          ),
+                        );
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0), // Abstand horizontal
@@ -158,7 +158,7 @@ class _LocationTabState extends State<LocationTab> {
                                     left: 15,
                                     child: Row(
                                       children: [
-                                        ...getLocationCategoryImages(categories, locations[index].categories).map((imgPath) {
+                                        ...getImagesOfCategories(categories, locations[index].categories).map((imgPath) {
                                           return Padding(
                                             padding: const EdgeInsets.only(right: 8.0),
                                             child: Image.asset(

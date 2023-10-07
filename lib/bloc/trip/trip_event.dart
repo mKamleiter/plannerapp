@@ -9,4 +9,11 @@ class LoadTripDetailsEvent extends TripEvent {
 class UpdateTripEvent extends TripEvent {
   final Trip updatedTrip;
   UpdateTripEvent(this.updatedTrip);
+  
+}
+
+class DeleteTripEvent extends TripEvent {
+  final Trip tripToDelete;
+  DeleteTripEvent(this.tripToDelete);
+  
 }

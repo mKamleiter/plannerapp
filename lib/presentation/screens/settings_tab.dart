@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mallorcaplanner/bloc/trip/trip_event.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_state.dart';
 import 'package:mallorcaplanner/entities/hotel.dart';
@@ -14,7 +15,6 @@ class SettingsTab extends StatefulWidget {
 }
 
 class _SettingsTabState extends State<SettingsTab> {
-
   void _editTrip(Trip trip, Hotel hotel) async {
     final result = await Navigator.push(
       context,
@@ -81,7 +81,7 @@ class _SettingsTabState extends State<SettingsTab> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  _deleteTrip(trip);
+                                  BlocProvider.of<TripBloc>(context).add(DeleteTripEvent(trip));
                                   Navigator.of(context).pop(); // Dialog schließen
                                 },
                                 child: const Text('Löschen'),

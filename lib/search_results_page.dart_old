@@ -1,15 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mallorcaplanner/search/addToCurrentTrip.dart';
+import 'package:mallorcaplanner/search/loadFavorites.dart';
+import 'package:mallorcaplanner/search/removeFromCurrentTrip.dart';
+
+import 'app_data_bloc.dart';
 import 'bottom_bar.dart';
 import 'details_page.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'app_data_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'helper/images.dart';
-
-import 'package:mallorcaplanner/search/addToCurrentTrip.dart';
-import 'package:mallorcaplanner/search/removeFromCurrentTrip.dart';
-import 'package:mallorcaplanner/search/loadFavorites.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String query;

@@ -1,20 +1,20 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mallorcaplanner/profile_page.dart';
-import 'bottom_bar.dart';
-import 'search_results_page.dart';
-import 'details_page.dart';
-import 'app_data_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'auth_google.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mallorcaplanner/presentation/screens/trip_overview.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:mallorcaplanner/data/repositories/firebase_hotel_repository.dart';
+import 'package:mallorcaplanner/domain/repositories/trip_repository.dart';
 import 'package:mallorcaplanner/helper/getCurrentUser.dart';
 //import 'package:mallorcaplanner/trip/addNewTrip.dart.old';
 import 'package:mallorcaplanner/helper/loadStartup.dart';
+import 'package:mallorcaplanner/presentation/screens/search_results.dart';
+import 'package:mallorcaplanner/presentation/screens/trip_overview.dart';
+import 'package:mallorcaplanner/presentation/widgets/bottom_bar.dart';
+import 'package:mallorcaplanner/profile_page.dart';
+import 'package:mallorcaplanner/use_cases/get_hotel_suggestions.dart';
+
+import 'app_data_bloc.dart';
 
 class StartPage extends StatefulWidget {
   @override
@@ -30,8 +30,8 @@ class _StartPageState extends State<StartPage> {
   Trip? userTrip;
   String? userId;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   //final TextEditingController _searchController = TextEditingController();
+  final hotelRepository = FirebaseHotelRepository();
 
   @override
   void initState() {
@@ -40,7 +40,6 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _loadData() async {
-
     final appDataBloc = BlocProvider.of<AppDataBloc>(context);
     loadLocationsFromFirestore().then((locations) {
       appDataBloc.add(UpdateLocations(locations));
@@ -291,8 +290,7 @@ class _StartPageState extends State<StartPage> {
                       },
                     ),
                     suggestionsCallback: (pattern) async {
-                      print("adfs");
-                      throw("erorr");
+                      return await GetHotelSuggestions(hotelRepository).call(pattern);
                     },
                     itemBuilder: (context, suggestion) {
                       return ListTile(
