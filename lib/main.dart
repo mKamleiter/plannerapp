@@ -1,20 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mallorcaplanner/bloc/details/details_bloc.dart';
+import 'package:mallorcaplanner/bloc/homepage/home_page_bloc.dart';
 import 'package:mallorcaplanner/bloc/map_bloc/map_bloc.dart';
+import 'package:mallorcaplanner/bloc/profile/profile_bloc.dart';
 import 'package:mallorcaplanner/bloc/search_results/search_results_bloc.dart';
 import 'package:mallorcaplanner/bloc/trip/trip_bloc.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_category_repository.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_hotel_repository.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_location_repository.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_trip_repository.dart';
-import 'package:mallorcaplanner/domain/repositories/category_repository.dart';
-import 'package:mallorcaplanner/domain/repositories/location_repository.dart';
-// import startpage.dart
-import 'start_page.dart';
+import 'package:mallorcaplanner/presentation/screens/home_page.dart';
 import 'app_data_bloc.dart';
-// import bloc_provider.dart aus bloc package
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -30,12 +28,12 @@ class MyApp extends StatelessWidget {
   final tripRepository = FirebaseTripRepository();
   final hotelRepository = FirebaseHotelRepository();
 
-  final AppDataBloc appDataBloc = AppDataBloc();
   late final MapBloc mapBloc;
   late final TripBloc tripBloc;
   late final DetailsBloc detailsBloc;
   late final SearchResultsBloc searchResultsBloc;
-
+  late final HomepageBloc homepageBloc;
+  late final ProfileBloc profileBloc;
   // This widget is the root of your application.
 
   MyApp() {
@@ -43,6 +41,8 @@ class MyApp extends StatelessWidget {
     tripBloc = TripBloc(tripRepository, locationRepository, categoryRepository, hotelRepository);
     searchResultsBloc = SearchResultsBloc(tripRepository, locationRepository, categoryRepository, hotelRepository);
     detailsBloc = DetailsBloc(tripRepository, locationRepository, categoryRepository);
+    homepageBloc = HomepageBloc(tripRepository);
+    profileBloc = ProfileBloc(tripRepository, locationRepository, categoryRepository, hotelRepository);
   }
 
   @override
@@ -58,10 +58,15 @@ class MyApp extends StatelessWidget {
         BlocProvider<DetailsBloc>(
           create: (context) => detailsBloc,
         ),
+        BlocProvider<HomepageBloc>(
+          create: (context) => homepageBloc,
+        ),
+        BlocProvider<ProfileBloc>(
+          create: (context) => profileBloc,
+        ),
         BlocProvider<SearchResultsBloc>(
           create: (context) => searchResultsBloc,
-        ),
-        BlocProvider<AppDataBloc>(create: (context) => appDataBloc)
+        )
       ],
       child: MaterialApp(
         title: 'MallorcaPlanner',
@@ -69,7 +74,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: StartPage(),
+        home: Homepage(),
       ),
     );
   }

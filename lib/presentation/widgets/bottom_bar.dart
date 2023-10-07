@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mallorcaplanner/presentation/screens/home_page.dart';
 import 'package:mallorcaplanner/presentation/screens/map.dart';
 import 'package:mallorcaplanner/presentation/screens/search_results.dart';
-import 'package:mallorcaplanner/start_page.dart';
 
 
 class CustomBottomBar extends StatelessWidget {
@@ -20,7 +20,7 @@ class CustomBottomBar extends StatelessWidget {
           case 0:
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => StartPage()),
+              MaterialPageRoute(builder: (context) => Homepage()),
               (Route<dynamic> route) => false,
             );
             break;
