@@ -12,7 +12,6 @@ import 'package:mallorcaplanner/data/repositories/firebase_hotel_repository.dart
 import 'package:mallorcaplanner/data/repositories/firebase_location_repository.dart';
 import 'package:mallorcaplanner/data/repositories/firebase_trip_repository.dart';
 import 'package:mallorcaplanner/presentation/screens/home_page.dart';
-import 'app_data_bloc.dart';
 import 'firebase_options.dart';
 
 void main() async {
